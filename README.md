@@ -1,2 +1,35 @@
-# Licensing.ActivationKeys
-This free, open-source .NET library allows you to license your non-free applications through activation keys.
+# Licensing library from SNBSLibs
+
+Free. Easy to use. No license files. **Everything is XML-documented in the code, so IntelliSense can show you all info about any member.**
+
+## Examples of usage
+
+Say, we have an app that isn't completely free, and we want to sell licenses for it and activate it through activation keys.
+
+1. First, we need a database to store licenses. You may use any database hosting from Windows Azure to [InfinityFree](https://www.infinityfree.net/) (**not an advertisement**). Get a connection string and go to the next step.
+
+2. Then we need to start a `LicensingClient` in the main method. It will decide whether to run the full app version or a message "Not licensed".
+
+```c#
+using SNBS.ActivationKeys;
+
+// ...
+
+public static void Main(string[] args) {
+  LicensingClient.Start(
+     "YourConnectionString", "YourProductName",
+     client => {
+       // Start the full version
+     },
+     (client, usability) => {
+       // What you do when the app isn't licensed
+     }
+  );
+}
+```
+
+3. Let's analyze this code. Method `Start` is static. In the first parameter, it takes the connection string to your database. In the second parameter you pass the name of your project — it is used to store the license information in the registry (licenses for different products store in different places).
+
+4. The third parameter has type `Action<LicensingClient>` and is ran when your product has a valid license. The `LicensingClient` instance passed to it can be used to fetch the license, reactivate/deactivate your product and validate activation keys (without using them).
+
+5. The fourth parameter has type `Action<LicensingClient, LicenseUsability>` and is ran where there's no license or an invalid license (configured in the registry for the current product). The `LicensingClient` passed can be used for the same things as described in paragraph 4. `LicenseUsability` is an enumeration describing reasons why a license is usable/not usable. Its values are: `Usable`, `Expired`, `NotFound`, `TooManyDevices` (each license can be used by a limited number of devices, set when it was created) and `NoConfiguredLicense`. They should be intuitive. (The difference between `NotFound` and `NoConfiguredLicense` — `NotFound` means a license is configured, but it doesn't exist in the license database. `NoConfiguredLicense` means there's *no license at all*.)
