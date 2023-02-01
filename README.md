@@ -10,7 +10,7 @@ If you need to know about all aspects of using this library, or you want to test
 
 Say, we have an app that isn't completely free, and we want to sell licenses for it and activate it through activation keys.
 
-1. First, we need a database to store licenses. You may use any database hosting from Windows Azure to [InfinityFree](https://www.infinityfree.net/) (**not an advertisement**). Get a connection string and go to the next step.
+1. First, we need a database to store licenses. You may use any database hosting from Windows Azure to [FreeSQLDatabase](https://freesqldatabase.com) (**not an advertisement**). Get a connection string and go to the next step.
 
 2. Then we need to start a `LicensingClient` in the main method. It will decide whether to run the full app version or a message "Not licensed".
 
