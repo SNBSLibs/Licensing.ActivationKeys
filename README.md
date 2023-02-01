@@ -38,3 +38,18 @@ public static void Main(string[] args) {
 
 5. The fourth parameter has type `Action<LicensingClient, LicenseUsability>` and is ran where there's no license or an invalid license (configured in the registry for the current product). The `LicensingClient` passed can be used for the same things as described in paragraph 4. `LicenseUsability` is an enumeration describing reasons why a license is usable/not usable. Its values are: `Usable`, `Expired`, `NotFound`, `TooManyDevices` (each license can be used by a limited number of devices, set when it was created) and `NoConfiguredLicense`. They should be intuitive. (The difference between `NotFound` and `NoConfiguredLicense` — `NotFound` means a license is configured, but it doesn't exist in the license database. `NoConfiguredLicense` means there's *no license at all*.)
 
+This was the most common usage of the library, but there are other ways, e.g. you can create a `LicensingClient` yourself:
+
+```c#
+var client = new LicensingClient
+  ("YourConnectionString", "YourProductName");
+var usability = client.GetCurrentLicense().Usability;
+
+if (usability != LicenseUsability.Usable) {
+  ShowMessage("Your license " +
+    (usability == LicenseUsability.Expired) ? "has expired" :
+    (usability == LicenseUsability.NotFound) ? "was canceled" :
+    (usability == LicenseUsability.NoConfiguredLicense) ? "configuration was corrupted" :
+    "was corrupted");
+}
+```
