@@ -2,7 +2,11 @@
 
 Free. Easy to use. No license files. **Everything is XML-documented in the code, so IntelliSense can show you all info about any member.**
 
+If you need to know about all aspects of using this library, or you want to test it, consider the branch `tests` containing the unit tests created for this library.
+
 ## Examples of usage
+
+### Using `LicensingClient`
 
 Say, we have an app that isn't completely free, and we want to sell licenses for it and activate it through activation keys.
 
@@ -33,3 +37,4 @@ public static void Main(string[] args) {
 4. The third parameter has type `Action<LicensingClient>` and is ran when your product has a valid license. The `LicensingClient` instance passed to it can be used to fetch the license, reactivate/deactivate your product and validate activation keys (without using them).
 
 5. The fourth parameter has type `Action<LicensingClient, LicenseUsability>` and is ran where there's no license or an invalid license (configured in the registry for the current product). The `LicensingClient` passed can be used for the same things as described in paragraph 4. `LicenseUsability` is an enumeration describing reasons why a license is usable/not usable. Its values are: `Usable`, `Expired`, `NotFound`, `TooManyDevices` (each license can be used by a limited number of devices, set when it was created) and `NoConfiguredLicense`. They should be intuitive. (The difference between `NotFound` and `NoConfiguredLicense` — `NotFound` means a license is configured, but it doesn't exist in the license database. `NoConfiguredLicense` means there's *no license at all*.)
+
