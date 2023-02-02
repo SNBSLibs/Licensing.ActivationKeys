@@ -36,7 +36,7 @@ public static void Main(string[] args) {
 
 4. The third parameter has type `Action<LicensingClient>` and is ran when your product has a valid license. The `LicensingClient` instance passed to it can be used to fetch the license, reactivate/deactivate your product and validate activation keys (without using them).
 
-5. The fourth parameter has type `Action<LicensingClient, LicenseUsability>` and is ran where there's no license or an invalid license (configured in the registry for the current product). The `LicensingClient` passed can be used for the same things as described in paragraph 4. `LicenseUsability` is an enumeration describing reasons why a license is usable/not usable. Its values are: `Usable`, `Expired`, `NotFound`, `TooManyDevices` (each license can be used by a limited number of devices, set when it was created) and `NoConfiguredLicense`. They should be intuitive. (The difference between `NotFound` and `NoConfiguredLicense` — `NotFound` means a license is configured, but it doesn't exist in the license database. `NoConfiguredLicense` means there's *no license at all*.)
+5. The fourth parameter has type `Action<LicensingClient, LicenseUsability>` and is ran where there's no license or an invalid license (configured in the registry for the current product). The `LicensingClient` passed can be used for the same things as described in paragraph 4. **`LicenseUsability` is an enumeration describing reasons why a license is usable/not usable.** Its values are: `Usable`, `Expired`, `NotFound`, `TooManyDevices` (each license can be used by a limited number of devices, set when it was created) and `NoConfiguredLicense`. They should be intuitive. (The difference between `NotFound` and `NoConfiguredLicense` — `NotFound` means a license is configured, but it doesn't exist in the license database. `NoConfiguredLicense` means there's *no license at all*.)
 
 This was the most common usage of the library, but there are other ways, e.g. you can create a `LicensingClient` yourself:
 
@@ -53,3 +53,43 @@ if (usability != LicenseUsability.Usable) {
     "was corrupted");
 }
 ```
+
+When you create a `LicensingClient` using the constructor, it automatically connects to the licenses database. Method `GetCurrentLicense()` retrieves the currently used activation key (stored in the registry) and looks up in the database to verify it. The returned type is **structure `LicenseInfo`**. It should be obvious that it contains detailed information about one license. Its properties are:
+
+ - `Key` of type `string`;
+ - `Expiration` of type `DateTime` (only date is stored, `DateTime` instead of `DateOnly` was used because of the Entity Framework's mapping mechanism);
+ - `Type` of type `LicenseType` (enumeration containing values `Trial`, `General`, `Professional`);
+ - `Usability` of type `LicenseUsability`.
+ 
+ #### Applying activation keys
+ 
+ Let's improve the previous example. Generally, applications should ask the end user to activate them if the current license is not usable. The corresponding method of `LicensingClient` is called `ActivateProduct()`. It returns `LicenseInfo` containing the information about the newly activated license (of course, it's activated only if it's usable).
+ 
+ ```c#
+ var client = new LicensingClient
+  ("YourConnectionString", "YourProductName");
+var usability = client.GetCurrentLicense().Usability;
+
+if (usability != LicenseUsability.Usable) {
+  ShowMessage("Your license " +
+    (usability == LicenseUsability.Expired) ? "has expired" :
+    (usability == LicenseUsability.NotFound) ? "was canceled" :
+    (usability == LicenseUsability.NoConfiguredLicense) ? "configuration was corrupted" :
+    "was corrupted");
+    
+  string key = AskUser("Enter an activation key");
+  var info = client.ActivateProduct(key);
+  
+  if (info.Usability == LicenseUsability.Usable) {
+    ShowMessage("License successfully activated! Expires at " + info.Expiration.ToShortDateString());
+  } else {
+    ShowMessage("An error occurred when trying to activate. The license" +
+      (usability == LicenseUsability.Expired) ? "has expired" :
+      (usability == LicenseUsability.NotFound) ? "was canceled" :
+      (usability == LicenseUsability.NoConfiguredLicense) ? "configuration was corrupted" :
+      "was corrupted");
+  }
+}
+ ```
+ 
+ A less common method is `ValidateLicense(string key)` which retrieves `LicenseInfo` of the license with the passed key, but doesn't try to activate it on the current device.
