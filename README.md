@@ -15,7 +15,7 @@ Say, we have an app that isn't completely free, and we want to sell licenses for
 2. Then we need to start a `LicensingClient` in the main method. It will decide whether to run the full app version or a message "Not licensed".
 
 ```c#
-using SNBS.ActivationKeys;
+using SNBS.Licensing;
 
 // ...
 
