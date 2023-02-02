@@ -59,7 +59,7 @@ When you create a `LicensingClient` using the constructor, it automatically conn
 
  - `Key` of type `string`;
  - `Expiration` of type `DateTime` (only date is stored, `DateTime` instead of `DateOnly` was used because of the Entity Framework's mapping mechanism);
- - `Type` of type `LicenseType` (enumeration containing values `Trial`, `General`, `Professional`);
+ - `Type` of type `LicenseType` (**enumeration containing values `Trial`, `General`, `Professional`**);
  - `Usability` of type `LicenseUsability`.
  
 #### Applying activation keys
@@ -95,4 +95,3 @@ if (usability != LicenseUsability.Usable) {
 ```
  
 A less common method is `ValidateLicense(string key)` which retrieves `LicenseInfo` of the license with the passed key, but doesn't try to activate it on the current device.
-
