@@ -95,3 +95,19 @@ if (usability != LicenseUsability.Usable) {
 ```
  
 A less common method is `ValidateLicense(string key)` which retrieves `LicenseInfo` of the license with the passed key, but doesn't try to activate it on the current device.
+
+### Using `LicensingAdmin`
+
+It's good when we can validate and apply license, but a class that would perform CRUD (Create, Read, Update, Delete) operations is also needed. It is `LicensingAdmin`. Its instances can be created just like `LicensingClient` instances, but without specifying product name and without a `Start` method.
+
+1. Let's create a license.
+
+```c#
+var admin = new LicensingAdmin("YourConnectionString", false, null);
+var info = admin.CreateLicense(LicenseType.Trial, DateTime.Today.AddDays(20), 1);
+ShowMessage("The newly created license is " + info.Key);
+```
+
+2. Analysis. Method `CreateLicense()` receives three parameters. The first one is the type of the needed license (a value of the `LicenseType` enumeration). The second one is a `DateTime` object representing the expiration date. The third one is the maximum number of devices (`short`) that can use the license.
+
+3. The returned object is `LicenseInfo` representing the new license. The most common use in this case is taking the (randomly generated) key of the new license.
