@@ -41,8 +41,7 @@ public static void Main(string[] args) {
 This was the most common usage of the library, but there are other ways, e.g. you can create a `LicensingClient` yourself:
 
 ```c#
-var client = new LicensingClient
-  ("YourConnectionString", "YourProductName");
+var client = new LicensingClient("YourConnectionString", "YourProductName");
 var usability = client.GetCurrentLicense().Usability;
 
 if (usability != LicenseUsability.Usable) {
@@ -66,8 +65,7 @@ When you create a `LicensingClient` using the constructor, it automatically conn
  Let's improve the previous example. Generally, applications should ask the end user to activate them if the current license is not usable. The corresponding method of `LicensingClient` is called `ActivateProduct()`. It returns `LicenseInfo` containing the information about the newly activated license (of course, it's activated only if it's usable).
  
  ```c#
- var client = new LicensingClient
-  ("YourConnectionString", "YourProductName");
+var client = new LicensingClient("YourConnectionString", "YourProductName");
 var usability = client.GetCurrentLicense().Usability;
 
 if (usability != LicenseUsability.Usable) {
