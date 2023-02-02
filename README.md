@@ -32,7 +32,7 @@ public static void Main(string[] args) {
 }
 ```
 
-3. Let's analyze this code. Method `Start` is static. In the first parameter, it takes the connection string to your database. In the second parameter you pass the name of your project — it is used to store the license information in the registry (licenses for different products store in different places).
+3. Let's analyze this code. Method `Start` is static. In the first parameter, it takes the connection string to your database. *Please note that if the connection string provided is invalid, an `InvalidConnectionStringException` will be thrown. The problematic connection string will be stored in the exception data under key `ProblematicConnectionString`.* In the second parameter you pass the name of your project — it is used to store the license information in the registry (licenses for different products store in different places).
 
 4. The third parameter is of type `bool`. It specifies whether the `LicensingClient` should try to connect to MySQL (if it's `false`, the client will try to connect to MS SQL Server). If it's `true`, you should also set the fourth parameter (of type `Version?`) to the version of MySQL. If MS SQL Server is used, this parameter should be `null`. If the third parameter is `true`, but the fourth one is `null`, an `ArgumentException` is thrown.
 
@@ -64,7 +64,9 @@ When you create a `LicensingClient` using the constructor, it automatically conn
  
 #### Applying activation keys
  
-Let's improve the previous example. Generally, applications should ask the end user to activate them if the current license is not usable. The corresponding method of `LicensingClient` is called `ActivateProduct()`. It returns `LicenseInfo` containing the information about the newly activated license (of course, it's activated only if it's usable).
+Let's improve the previous example. Generally, applications should ask the end user to activate them if the current license is not usable. The corresponding method of `LicensingClient` is called `ActivateProduct()`. It returns `LicenseInfo` containing the information about the newly activated license (of course, it's activated only if it's usable)
+
+*Please note that the current activation key is stored in the registry, and thus `ActivateProduct()` needs admin permissions. If they aren't provided, a `RegistryAccessException` will be thrown. The inaccessible registry key will be stored in the exception data under key `InaccessibleRegistryKey`.*
  
  ```c#
 var client = new LicensingClient("YourConnectionString", "YourProductName");
