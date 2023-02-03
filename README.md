@@ -120,7 +120,7 @@ Of course, `LicensingAdmin` can also update and delete licenses.
 var admin = new LicensingAdmin("YourConnectionString", false, null);
 var info = admin.UpdateLicense("AAAAA-AAAAA-AAAAA-AAAAA-AAAAA", null, LicenseType.Professional, 10);
 
-ShowMessage("The license " + info.Key + " now is of type " + info.Type.ToString() + " and can be used by (maximum) " + info.MaxDevices.ToString() + " devices.");
+ShowMessage("The license " + info.Key + " is now of type " + info.Type.ToString() + " and can be used by (maximum) " + info.MaxDevices.ToString() + " devices.");
 ```
 
 Method `UpdateLicense` receives four arguments. The first one is key of the license to update.
