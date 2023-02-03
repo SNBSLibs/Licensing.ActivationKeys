@@ -106,7 +106,7 @@ It's good when we can validate and apply licenses, but a class that would perfor
 
 ```c#
 var admin = new LicensingAdmin("YourConnectionString", false, null);
-var info = admin.CreateLicense(LicenseType.Trial, DateTime.Today.AddDays(20), 1);
+var info = admin.CreateLicense(DateTime.Today.AddDays(20), LicenseType.Trial, 1);
 ShowMessage("The newly created license is " + info.Key);
 ```
 
