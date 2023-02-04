@@ -139,3 +139,7 @@ ShowMessage("The license " + info.Key + " was deleted.");
 ```
 
 The only argument is key of the license to delete. The returned type is `LicenseInfo` storing information about the deleted license.
+
+## Versions
+
+This is the first version of the library. But I'm still working on it. Everybody using my code is kindly asked to open an issue on this repository if you want a new feature or found a bug! Or fork it and improve yourself!
