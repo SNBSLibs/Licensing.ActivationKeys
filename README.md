@@ -12,7 +12,7 @@ Say, we have an app that isn't completely free, and we want to sell licenses for
 
 1. First, we need a database to store licenses. This library supports MS SQL Server and MySQL. You may use any database hosting from Windows Azure to [FreeSQLDatabase](https://freesqldatabase.com) (uses MySQL 5.0.12). **Not an advertisement**. Get a connection string and go to the next step.
 
-2. Then we need to start a `LicensingClient` in the main method. It will decide whether to run the full app version or a message "Not licensed".
+2. Then we need to start a `LicensingClient` in the main method. It will decide whether to run the full app version or a message "Not licensed". *Please note that `LicensingClient` opens a registry key in the constructor, and thus it needs admin permissions. If they aren't provided, a `RegistryAccessException` will be thrown. The inaccessible registry key will be stored in the exception data under key `InaccessibleRegistryKey`.*
 
 ```c#
 using SNBS.Licensing;
@@ -66,8 +66,6 @@ When you create a `LicensingClient` using the constructor, it automatically conn
  
 Let's improve the previous example. Generally, applications should ask the end user to activate them if the current license is not usable. The corresponding method of `LicensingClient` is called `ActivateProduct()`. It returns `LicenseInfo` containing the information about the newly activated license (of course, it's activated only if it's usable)
 
-*Please note that the current activation key is stored in the registry, and thus `ActivateProduct()` needs admin permissions. If they aren't provided, a `RegistryAccessException` will be thrown. The inaccessible registry key will be stored in the exception data under key `InaccessibleRegistryKey`.*
- 
  ```c#
 var client = new LicensingClient("YourConnectionString", "YourProductName");
 var usability = client.GetCurrentLicense().Usability;
@@ -93,10 +91,31 @@ if (usability != LicenseUsability.Usable) {
   }
 }
 ```
- 
-A less common method is `ValidateLicense(string key)` which retrieves `LicenseInfo` of the license with the passed key, but doesn't try to activate it on the current device.
 
 There are other (non-common used) members documented as XML in the code. (See also the unit tests from branch `tests`. They are a good documentation.)
+
+### Using `LicenseValidator`
+
+`LicenseValidator` can be used to retrieve information (`LicenseInfo`) about a license, without trying to apply it on the current device. Its only method is `ValidateLicense` (except methods of `System.Object`).
+
+The usage isn't complicated.
+
+1. Let's validate a license:
+
+```c#
+var validator = new LicenseValidator("YourConnectionString", false, null);
+var info = validator.ValidateLicense("AAAAA-AAAAA-AAAAA-AAAAA-AAAAA");
+
+if (info.Usability == LicenseUsability.Usable) {
+  ShowMessage("This license is valid");
+}
+```
+
+2. `LicenseValidator` doesn't deal with registry, so admin permissions aren't needed.
+
+3. The constructor takes connection string to licenses database, a `bool` value telling whether to use MySQL and the version of MySQL (if it is used), just like the `LicensingClient` constructor, but without specifying product name.
+
+4. Method `ValidateLicense` takes a license key in its only argument and returns `LicenseInfo` representing that license.
 
 ### Using `LicensingAdmin`
 
