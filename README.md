@@ -10,7 +10,15 @@ If you need to know about all aspects of using this library, or you want to test
 
 Say, we have an app that isn't completely free, and we want to sell licenses for it and activate it through activation keys.
 
-1. First, we need a database to store licenses. This library supports MS SQL Server and MySQL. You may use any database hosting from Windows Azure to [FreeSQLDatabase](https://freesqldatabase.com) (uses MySQL 5.0.12). **Not an advertisement**. Get a connection string and go to the next step.
+1. First, we need a database to store licenses. This library supports MS SQL Server and MySQL. You may use any database hosting from Windows Azure to [FreeSQLDatabase](https://freesqldatabase.com) (uses MySQL 5.0.12). **Not an advertisement**. It should contain one table called `Licenses` with the following columns:
+
+   - `Key` of type `char(29)`;
+   - `Expiration` of type `date`;
+   - `Type` of type `varchar(12)`;
+   - `MaxDevices` of type `smallint`;
+   - `UsingDevices` of type `smallint`.
+   
+   Get a connection string and go to the next step.
 
 2. Then we need to start a `LicensingClient` in the main method. It will decide whether to run the full app version or a message "Not licensed". *Please note that `LicensingClient` opens a registry key in the constructor, and thus it needs admin permissions. If they aren't provided, a `RegistryAccessException` will be thrown. The inaccessible registry key will be stored in the exception data under key `InaccessibleRegistryKey`.*
 
@@ -32,7 +40,7 @@ public static void Main(string[] args) {
 }
 ```
 
-3. Let's analyze this code. Method `Start` is static. In the first parameter, it takes the connection string to your database. *Please note that if the connection string provided is invalid, an `InvalidConnectionStringException` will be thrown. The problematic connection string will be stored in the exception data under key `ProblematicConnectionString`.* In the second parameter you pass the name of your project — it is used to store the license information in the registry (licenses for different products store in different places).
+3. Let's analyze this code. Method `Start` is static. In the first parameter, it takes the connection string to your database. *Please note that if the connection string provided is invalid, or the database structure is invalid (the valid structure is above), a `DatabaseException` will be thrown.* In the second parameter you pass the name of your project — it is used to store the license information in the registry (licenses for different products store in different places).
 
 4. The third parameter is of type `bool`. It specifies whether the `LicensingClient` should try to connect to MySQL (if it's `false`, the client will try to connect to MS SQL Server). If it's `true`, you should also set the fourth parameter (of type `Version?`) to the version of MySQL. If MS SQL Server is used, this parameter should be `null`. If the third parameter is `true`, but the fourth one is `null`, an `ArgumentException` is thrown.
 
