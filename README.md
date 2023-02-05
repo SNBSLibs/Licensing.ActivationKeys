@@ -100,10 +100,11 @@ There are other (non-common used) members documented as XML in the code. (See al
 
 The usage isn't complicated.
 
-1. Let's validate a license:
+1. Let's validate a license. I will use MySQL here, to show this feature:
 
 ```c#
-var validator = new LicenseValidator("YourConnectionString", false, null);
+var validator = new LicenseValidator("Server=sql7.freesqldatabase.com; Database=sql7594998; Uid=sql7594998; Pwd=l2TZZAQ5hB", true,
+  new Version(5, 0, 12));
 var info = validator.ValidateLicense("AAAAA-AAAAA-AAAAA-AAAAA-AAAAA");
 
 if (info.Usability == LicenseUsability.Usable) {
@@ -111,11 +112,13 @@ if (info.Usability == LicenseUsability.Usable) {
 }
 ```
 
-2. `LicenseValidator` doesn't deal with registry, so admin permissions aren't needed.
+3. If you run the code above, it will connect to my own database hosted on [FreeSQLDatabase](https://freesqldatabase.com). **Not an advertisement. This service is used because it's free and easy to use.** If you have your own database hosted there, replace values in the connection string with the values in email they will send you.
 
-3. The constructor takes connection string to licenses database, a `bool` value telling whether to use MySQL and the version of MySQL (if it is used), just like the `LicensingClient` constructor, but without specifying product name.
+4. `LicenseValidator` doesn't deal with registry, so admin permissions aren't needed.
 
-4. Method `ValidateLicense` takes a license key in its only argument and returns `LicenseInfo` representing that license.
+5. The constructor takes connection string to licenses database, a `bool` value telling whether to use MySQL and the version of MySQL (if it is used), just like the `LicensingClient` constructor, but without specifying product name.
+
+6. Method `ValidateLicense` takes a license key in its only argument and returns `LicenseInfo` representing that license.
 
 ### Using `LicensingAdmin`
 
