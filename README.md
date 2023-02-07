@@ -6,6 +6,8 @@ If you need to know about all aspects of using this library, or you want to test
 
 ## Installation
 
+**Please note that this library is still being developed, and no NuGet package is created yet. Planned to finish development not later that 19 Feb, 2023.**
+
 The easiest way to install this library is using NuGet. Right-click on your project name is Visual Studio's Solution Explorer, select option "Manage NuGet packages", find package "Licensing.ActivationKeys" and install it. Or use the `Install-Package` command:
 
 ```powershell
