@@ -61,15 +61,16 @@ public static void Main(string[] args) {
 This was the most common usage of the library, but there are other ways, e.g. you can create a `LicensingClient` yourself (specify connection string, product name, use MySQL or not and the version of MySQL, as in the previous example):
 
 ```c#
-var client = new LicensingClient("YourConnectionString", "YourProductName", false, null);
-var usability = client.GetCurrentLicense().Usability;
+using (var client = new LicensingClient("YourConnectionString", "YourProductName", false, null)) {
+  var usability = client.GetCurrentLicense().Usability;
 
-if (usability != LicenseUsability.Usable) {
-  ShowMessage("Your license " +
-    (usability == LicenseUsability.Expired) ? "has expired" :
-    (usability == LicenseUsability.NotFound) ? "was canceled" :
-    (usability == LicenseUsability.NoConfiguredLicense) ? "configuration was corrupted" :
-    "was corrupted");
+  if (usability != LicenseUsability.Usable) {
+    ShowMessage("Your license " +
+      (usability == LicenseUsability.Expired) ? "has expired" :
+      (usability == LicenseUsability.NotFound) ? "was canceled" :
+      (usability == LicenseUsability.NoConfiguredLicense) ? "configuration was corrupted" :
+      "was corrupted");
+  }
 }
 ```
 
@@ -85,27 +86,28 @@ When you create a `LicensingClient` using the constructor, it automatically conn
 Let's improve the previous example. Generally, applications should ask the end user to activate them if the current license is not usable. The corresponding method of `LicensingClient` is called `ActivateProduct()`. It returns `LicenseInfo` containing the information about the newly activated license (of course, it's activated only if it's usable)
 
  ```c#
-var client = new LicensingClient("YourConnectionString", "YourProductName");
-var usability = client.GetCurrentLicense().Usability;
+using (var client = new LicensingClient("YourConnectionString", "YourProductName")) {
+  var usability = client.GetCurrentLicense().Usability;
 
-if (usability != LicenseUsability.Usable) {
-  ShowMessage("Your license " +
-    (usability == LicenseUsability.Expired) ? "has expired" :
-    (usability == LicenseUsability.NotFound) ? "was canceled" :
-    (usability == LicenseUsability.NoConfiguredLicense) ? "configuration was corrupted" :
-    "was corrupted");
-    
-  string key = AskUser("Enter an activation key");
-  var info = client.ActivateProduct(key);
-  
-  if (info.Usability == LicenseUsability.Usable) {
-    ShowMessage("License successfully activated! Expires at " + info.Expiration.ToShortDateString());
-  } else {
-    ShowMessage("An error occurred when trying to activate. The license" +
+  if (usability != LicenseUsability.Usable) {
+    ShowMessage("Your license " +
       (usability == LicenseUsability.Expired) ? "has expired" :
       (usability == LicenseUsability.NotFound) ? "was canceled" :
       (usability == LicenseUsability.NoConfiguredLicense) ? "configuration was corrupted" :
       "was corrupted");
+    
+    string key = AskUser("Enter an activation key");
+    var info = client.ActivateProduct(key);
+  
+    if (info.Usability == LicenseUsability.Usable) {
+      ShowMessage("License successfully activated! Expires at " + info.Expiration.ToShortDateString());
+    } else {
+      ShowMessage("An error occurred when trying to activate. The license" +
+        (usability == LicenseUsability.Expired) ? "has expired" :
+        (usability == LicenseUsability.NotFound) ? "was canceled" :
+        (usability == LicenseUsability.NoConfiguredLicense) ? "configuration was corrupted" :
+        "was corrupted");
+    }
   }
 }
 ```
@@ -121,12 +123,13 @@ The usage isn't complicated.
 1. Let's validate a license. I will use MySQL here, to show this feature:
 
 ```c#
-var validator = new LicenseValidator("Server=sql7.freesqldatabase.com; Database=sql7594998; Uid=sql7594998; Pwd=l2TZZAQ5hB", true,
-  new Version(5, 0, 12));
-var info = validator.ValidateLicense("AAAAA-AAAAA-AAAAA-AAAAA-AAAAA");
+using (var validator = new LicenseValidator("Server=sql7.freesqldatabase.com; Database=sql7594998; Uid=sql7594998; Pwd=l2TZZAQ5hB", true,
+  new Version(5, 0, 12))) {
+  var info = validator.ValidateLicense("AAAAA-AAAAA-AAAAA-AAAAA-AAAAA");
 
-if (info.Usability == LicenseUsability.Usable) {
-  ShowMessage("This license is valid");
+  if (info.Usability == LicenseUsability.Usable) {
+    ShowMessage("This license is valid");
+  }
 }
 ```
 
@@ -145,9 +148,11 @@ It's good when we can validate and apply licenses, but a class that would perfor
 1. Let's create a license.
 
 ```c#
-var admin = new LicensingAdmin("YourConnectionString", false, null);
-var info = admin.CreateLicense(DateTime.Today.AddDays(20), LicenseType.Trial, 1);
-ShowMessage("The newly created license is " + info.Key);
+using (var admin = new LicensingAdmin("YourConnectionString", false, null)) {
+  var info = admin.CreateLicense(DateTime.Today.AddDays(20), LicenseType.Trial, 1);
+  
+  ShowMessage("The newly created license is " + info.Key);
+}
 ```
 
 2. Analysis. Method `CreateLicense()` receives three parameters. The first one is the type of the needed license (a value of the `LicenseType` enumeration). The second one is a `DateTime` object representing the expiration date. The third one is the maximum number of devices (`short`) that can use the license.
@@ -157,10 +162,11 @@ ShowMessage("The newly created license is " + info.Key);
 Of course, `LicensingAdmin` can also update and delete licenses.
 
 ```c#
-var admin = new LicensingAdmin("YourConnectionString", false, null);
-var info = admin.UpdateLicense("AAAAA-AAAAA-AAAAA-AAAAA-AAAAA", null, LicenseType.Professional, 10);
+using (var admin = new LicensingAdmin("YourConnectionString", false, null)) {
+  var info = admin.UpdateLicense("AAAAA-AAAAA-AAAAA-AAAAA-AAAAA", null, LicenseType.Professional, 10);
 
-ShowMessage("The license " + info.Key + " is now of type " + info.Type.ToString() + " and can be used by (maximum) " + info.MaxDevices.ToString() + " devices.");
+  ShowMessage("The license " + info.Key + " is now of type " + info.Type.ToString() + " and can be used by (maximum) " + info.MaxDevices.ToString() + " devices.");
+}
 ```
 
 Method `UpdateLicense` receives four arguments. The first one is key of the license to update.
@@ -172,13 +178,33 @@ The returned type is `LicenseInfo` that stores updated information about the lic
 Let's imagine we no longer need the updated license. It should be deleted:
 
 ```c#
-var admin = new LicensingAdmin("YourConnectionString", false, null);
-var info = admin.DeleteLicense("AAAAA-AAAAA-AAAAA-AAAAA-AAAAA");
+using (var admin = new LicensingAdmin("YourConnectionString", false, null)) {
+  var info = admin.DeleteLicense("AAAAA-AAAAA-AAAAA-AAAAA-AAAAA");
 
-ShowMessage("The license " + info.Key + " was deleted.");
+  ShowMessage("The license " + info.Key + " was deleted.");
+}
 ```
 
 The only argument is key of the license to delete. The returned type is `LicenseInfo` storing information about the deleted license.
+
+### Casts
+
+Classes `LicensingClient`, `LicenseValidator` and `LicensingAdmin` deal with the same database, but offer different functions. That's why I've defined explicit casts between them:
+
+```c#
+using (var admin = new LicensingAdmin("YourConnectionString", false, null)) {
+  // Use it
+  
+  var validator = (LicenseValidator)admin;
+  var info = validator.ValidateLicense("AAAAA-AAAAA-AAAAA-AAAAA-AAAAA");
+}
+```
+
+You can convert the mentioned classes to each other however you like, but you cannot convert `LicenseValidator` to `LicensingClient` and `LicensingAdmin` to `LicensingClient` (because `LicensingClient` needs product name for creation, which cannot be taken from other classes).
+
+### Disposing
+
+**It is *very* important to dispose `LicensingClient`, `LicenseValidator` and `LicensingAdmin` after use** because the connection to the licenses database is closed only when `Dispose()` is called. As the mentioned classes implement `IDisposable`, you can use the `using` operator instead of calling `Dispose()` yourself. 
 
 ## Versions
 
