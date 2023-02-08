@@ -2,7 +2,7 @@
 
 Free. Easy to use. No license files. **Everything is XML-documented in the code, so IntelliSense can show you all info about any member.**
 
-If you need to know about all aspects of using this library, or you want to test it, consider the branch `tests` containing the unit tests created for this library.
+If you need to know about all aspects of using this library, or you want to test it, consider the branch `tests` containing the unit tests created for this library. **Will be published when the development will be finished, i.e. not later than 19 Feb, 2023.**
 
 ## Installation
 
