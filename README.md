@@ -104,7 +104,7 @@ using (var client = new LicensingClient("YourConnectionString", "YourProductName
     if (info.Usability == LicenseUsability.Usable) {
       ShowMessage("License successfully activated! Expires at " + info.Expiration.ToShortDateString());
     } else {
-      ShowMessage("An error occurred when trying to activate. The license" +
+      ShowMessage("An error occurred when trying to activate. The license " +
         (usability == LicenseUsability.Expired) ? "has expired" :
         (usability == LicenseUsability.NotFound) ? "was canceled" :
         (usability == LicenseUsability.NoConfiguredLicense) ? "configuration was corrupted" :
