@@ -58,7 +58,7 @@ public static void Main(string[] args) {
 
 5. The third parameter has type `Action<LicensingClient>` and is ran when your product has a valid license. The `LicensingClient` instance passed to it can be used to fetch the license, reactivate/deactivate your product and validate activation keys (without using them).
 
-6. The fourth parameter has type `Action<LicensingClient, LicenseUsability>` and is ran where there's no license or an invalid license (configured in the registry for the current product). The `LicensingClient` passed can be used for the same things as described in paragraph 4. **`LicenseUsability` is an enumeration describing reasons why a license is usable/not usable.** Its values are: `Usable`, `Expired`, `NotFound`, `TooManyDevices` (each license can be used by a limited number of devices, set when it was created) and `NoConfiguredLicense`. They should be intuitive. (The difference between `NotFound` and `NoConfiguredLicense` — `NotFound` means a license is configured, but it doesn't exist in the license database. `NoConfiguredLicense` means there's *no license at all*.)
+6. The fourth parameter has type `Action<LicensingClient, LicenseUsability>` and is ran where there's no license or an invalid license (configured in the registry for the current product). The `LicensingClient` passed can be used for the same things as described in paragraph 4. **`LicenseUsability` is an enumeration describing reasons why a license is usable/not usable.** Its values are: `Usable`, `Expired`, `NotFound`, `TooManyDevices` (each license can be used by a limited number of devices, set when it was created) and `NoConfiguredLicense`. They should be intuitive. (The difference between `NotFound` and `NoConfiguredLicense` — `NotFound` means a license is configured, but it doesn't exist in the license database. `NoConfiguredLicense` means there's *no license at all*.) *Note that the value `NoConfiguredLicense` cannot be returned by any method, except `GetCurrentLicense()`.*
 
 This was the most common usage of the library, but there are other ways, e.g. you can create a `LicensingClient` yourself (specify connection string, product name, use MySQL or not and the version of MySQL, as in the previous example):
 
@@ -85,7 +85,7 @@ When you create a `LicensingClient` using the constructor, it automatically conn
  
 #### Applying activation keys
  
-Let's improve the previous example. Generally, applications should ask the end user to activate them if the current license is not usable. The corresponding method of `LicensingClient` is called `ActivateProduct()`. It returns `LicenseInfo` containing the information about the newly activated license (of course, it's activated only if it's usable)
+Let's improve the previous example. Generally, applications should ask the end user to activate them if the current license is not usable. The corresponding method of `LicensingClient` is called `ActivateProduct()`. It returns `LicenseInfo` containing the information about the newly activated license (of course, it's activated only if it's usable).
 
  ```c#
 using (var client = new LicensingClient("YourConnectionString", "YourProductName")) {
@@ -105,9 +105,9 @@ using (var client = new LicensingClient("YourConnectionString", "YourProductName
       ShowMessage("License successfully activated! Expires at " + info.Expiration.ToShortDateString());
     } else {
       ShowMessage("An error occurred when trying to activate. The license " +
-        (usability == LicenseUsability.Expired) ? "has expired" :
-        (usability == LicenseUsability.NotFound) ? "was canceled" :
-        (usability == LicenseUsability.NoConfiguredLicense) ? "configuration was corrupted" :
+        (info.Usability == LicenseUsability.Expired) ? "has expired" :
+        (info.Usability == LicenseUsability.NotFound) ? "was canceled" :
+        (info.Usability == LicenseUsability.TooManyDevices) ? "was used by too many devices" :
         "was corrupted");
     }
   }
