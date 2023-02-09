@@ -78,10 +78,10 @@ using (var client = new LicensingClient("YourConnectionString", "YourProductName
 
 When you create a `LicensingClient` using the constructor, it automatically connects to the licenses database. Method `GetCurrentLicense()` retrieves the currently used activation key (stored in the registry) and looks up in the database to verify it. The returned type is **structure `LicenseInfo`**. It should be obvious that it contains detailed information about one license. Its properties are:
 
- - `Key` of type `string`;
- - `Expiration` of type `DateTime` (only date is stored, `DateTime` instead of `DateOnly` was used because of the Entity Framework's mapping mechanism);
- - `Type` of type `LicenseType` (**enumeration containing values `Trial`, `General`, `Professional`**);
- - `Usability` of type `LicenseUsability`.
+ - `Key` of type `string?`;
+ - `Expiration` of type `DateTime?` (only date is stored, `DateTime` instead of `DateOnly` was used because of the Entity Framework's mapping mechanism);
+ - `Type` of type `LicenseType?` (**enumeration containing values `Trial`, `General`, `Professional`**);
+ - `Usability` of type `LicenseUsability` (all other properties will be `null` if this one isn't equal to `LicenseUsability.Usable`).
  
 #### Applying activation keys
  
