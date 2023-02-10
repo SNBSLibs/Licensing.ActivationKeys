@@ -202,7 +202,14 @@ using (var admin = new LicensingAdmin("YourConnectionString", false, null)) {
 }
 ```
 
-You can convert the mentioned classes to each other however you like, but you cannot convert `LicenseValidator` to `LicensingClient` and `LicensingAdmin` to `LicensingClient` (because `LicensingClient` needs product name for creation, which cannot be taken from other classes).
+You can convert the mentioned classes to each other however you like, but you cannot convert `LicenseValidator` to `LicensingClient` and `LicensingAdmin` to `LicensingClient` (because `LicensingClient` needs product name for creation, which cannot be taken from other classes). But you can use `LicensingClient` constructors for that:
+
+```c#
+var admin = new LicensingAdmin("YourConnectionString", false, null);
+var client = new LicensingClient(admin, "YourProductName");
+```
+
+The code above will retrieve the connection string and information about usage of MySQL from the `LicensingAdmin` instance (you can also pass a `LicenseValidator` instance).
 
 ### Disposing
 
