@@ -207,6 +207,25 @@ The code above will retrieve the connection string and information about usage o
 
 **It is *very* important to dispose `LicensingClient`, `LicenseValidator` and `LicensingAdmin` after use** because the connection to the licenses database is closed only when `Dispose()` is called. As the mentioned classes implement `IDisposable`, you can use the `using` operator instead of calling `Dispose()` yourself. 
 
+## Tests
+
+The unit tests need an empty LocalDB database. First, let this library create it, then run the following query to add a test record:
+
+```sql
+INSERT INTO [Licenses] ([Key],
+                        [Expiration],
+                        [Type],
+                        [UsingDevices],
+                        [MaxDevices])
+VALUES ('AAAAA-AAAAA-AAAAA-AAAAA-AAAAA',
+        '2024-12-30',
+        'Professional',
+        0,
+        3);
+```
+
+**Unit tests in class `LicensingAdminTests` should be ran one-by-one, and test `CanUpdateLicense` should be ran before test `CanDeleteLicense`!**
+
 ## Versions
 
 This is the first version of the library. But I'm still working on it. Everybody using my code is kindly asked to open an issue on this repository if you want a new feature or found a bug! Or fork it and improve yourself!
