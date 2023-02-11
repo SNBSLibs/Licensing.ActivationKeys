@@ -2,7 +2,7 @@
 
 Free. Easy to use. No license files. **Everything is XML-documented in the code, so IntelliSense can show you all info about any member.**
 
-If you need to know about all aspects of using this library, or you want to test it, consider the branch `tests` containing the unit tests created for this library. **Will be published when the development will be finished, i.e. not later than 19 Feb, 2023.**
+If you need to know about all aspects of using this library, or you want to test it, consider the directory `Licensing.ActivationKeys.Tests` containing the unit tests created for this library. **Will be published when the development will be finished, i.e. not later than 19 Feb, 2023.**
 
 ## Installation
 
@@ -106,7 +106,7 @@ using (var client = new LicensingClient("YourConnectionString", "YourProductName
 }
 ```
 
-There are other (non-common used) members documented as XML in the code. (See also the unit tests from branch `tests`. They are a good documentation.)
+There are other (non-common used) members documented as XML in the code. (See also the unit tests from directory `Licensing.ActivationKeys.Tests`. They are a good documentation.)
 
 ### Using `LicenseValidator`
 
