@@ -9,7 +9,7 @@ If you need to know about all aspects of using this library, or you want to test
 The easiest way to install this library is using NuGet. Right-click on your project name is Visual Studio's Solution Explorer, select option "Manage NuGet packages", find package "Licensing.ActivationKeys" and install it. Or use the `Install-Package` command:
 
 ```powershell
-Install-Package Licensing.ActivationKeys
+Install-Package SNBS.Licensing.ActivationKeys
 ```
 
 You can also clone this repository (or download it using the green "Code" button), compile it and add a reference to the compiled assembly in your project.
