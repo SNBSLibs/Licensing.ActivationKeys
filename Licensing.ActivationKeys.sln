@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Licensing.ActivationKeys", "Licensing.ActivationKeys\Licensing.ActivationKeys.csproj", "{F3B830BF-CC91-41EA-B71C-56CAF2E3B303}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Licensing.ActivationKeys.Tests", "Licensing.ActivationKeys.Tests\Licensing.ActivationKeys.Tests.csproj", "{C2623937-2279-4EE3-8D51-7D95870F3776}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F3B830BF-CC91-41EA-B71C-56CAF2E3B303}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3B830BF-CC91-41EA-B71C-56CAF2E3B303}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3B830BF-CC91-41EA-B71C-56CAF2E3B303}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3B830BF-CC91-41EA-B71C-56CAF2E3B303}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2623937-2279-4EE3-8D51-7D95870F3776}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2623937-2279-4EE3-8D51-7D95870F3776}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2623937-2279-4EE3-8D51-7D95870F3776}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2623937-2279-4EE3-8D51-7D95870F3776}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AABAD3CB-2F17-4D9C-B44A-674C987D1AF9}
+	EndGlobalSection
+EndGlobal

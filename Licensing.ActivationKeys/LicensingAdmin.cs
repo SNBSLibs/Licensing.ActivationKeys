@@ -70,6 +70,9 @@ namespace SNBS.Licensing
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown if <paramref name="maxDevices"/> is negative or equal to 0.
         /// </exception>
+        /// <exception cref="OverflowException">
+        /// Thrown if this library cannot generate a unique key for a new license (too many attempts). You can recall this method to fix this (to make more attempts). It isn't recalled automatically to prevent hanging.
+        /// </exception>
         public LicenseInfo CreateLicense(DateTime expiration, LicenseType type, short maxDevices)
         {
             Check.Disposed(isDisposed, this);
