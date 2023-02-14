@@ -1,0 +1,8 @@
+# This is the GitHub Pages configuration.
+
+remote_theme: pages-themes/merlot@v0.2.0
+plugins:
+- jekyll-remote-theme
+title: Licensing library from SNBS
+description: This free, open-source .NET library allows you to license your non-free applications through activation keys.
+show_downloads: true
