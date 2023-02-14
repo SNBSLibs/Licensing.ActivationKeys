@@ -223,7 +223,3 @@ VALUES ('AAAAA-AAAAA-AAAAA-AAAAA-AAAAA',
 ```
 
 **Unit tests in class `LicensingAdminTests` should be ran one-by-one, and test `CanUpdateLicense` should be ran before test `CanDeleteLicense`!**
-
-## Versions
-
-This is the first version of the library. But I'm still working on it. Everybody using my code is kindly asked to open an issue on this repository if you want a new feature or found a bug! Or fork it and improve yourself!
