@@ -1,4 +1,4 @@
-# Licensing library from SNBSLibs
+# Licensing library from SNBS
 
 Free. Easy to use. No license files. **Everything is XML-documented in the code, so IntelliSense can show you all info about any member.**
 
