@@ -92,13 +92,7 @@ namespace SNBS.Licensing
 
             context.Licenses.Add(license);
 
-            try
-            {
-                context.SaveChanges();
-            } catch (Exception ex)
-            {
-                ThrowHelper.DatabaseError(ex);
-            }
+            ChangesSaver.SaveChanges(context);
 
             return new(license, GetUsability(license));
         }
@@ -163,13 +157,7 @@ namespace SNBS.Licensing
             }
             if (type != null) license.Type = (LicenseType)type;
 
-            try
-            {
-                context.SaveChanges();
-            } catch (Exception ex)
-            {
-                ThrowHelper.DatabaseError(ex);
-            }
+            ChangesSaver.SaveChanges(context);
 
             return new(license, GetUsability(license));
         }
@@ -212,13 +200,7 @@ namespace SNBS.Licensing
 
             context.Licenses.Remove(license);
 
-            try
-            {
-                context.SaveChanges();
-            } catch (Exception ex)
-            {
-                ThrowHelper.DatabaseError(ex);
-            }
+            ChangesSaver.SaveChanges(context);
 
             return new(license, GetUsability(license));
         }
