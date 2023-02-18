@@ -21,13 +21,13 @@ namespace SNBS.Licensing.Tests
 
             Assert.AreEqual(result.Usability, LicenseUsability.Usable, "Incorrect usability");
             Assert.AreEqual(result.Type, LicenseType.Professional, "Incorrect type");
-            Assert.AreEqual(result.Expiration, new DateTime(2024, 12, 30), "Incorrect expiration date");
+            Assert.AreEqual(result.Expiration, DateTime.Today.AddYears(1), "Incorrect expiration date");
         }
 
         [TestMethod]
         public void CannotValidateInvalidLicense()
         {
-            var result = CreateValidator().ValidateLicense("BBBBB-BBBBB-BBBBB-BBBBB-BBBBB");
+            var result = CreateValidator().ValidateLicense("YYYYY-YYYYY-YYYYY-YYYYY-YYYYY");
 
             Assert.AreEqual(result.Usability, LicenseUsability.NotFound, "Incorrect usability");
             Assert.IsNull(result.Type, "Type is not null");

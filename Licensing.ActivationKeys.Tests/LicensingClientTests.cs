@@ -35,7 +35,7 @@ namespace SNBS.Licensing.Tests
         {
             regKey.SetValue("CurrentKey", string.Empty);
 
-            var result = CreateClient().ActivateProduct("BBBBB-BBBBB-BBBBB-BBBBB-BBBBB");
+            var result = CreateClient().ActivateProduct("YYYYY-YYYYY-YYYYY-YYYYY-YYYYY");
 
             string? regValue = regKey.GetValue("CurrentKey") as string;
 
@@ -62,14 +62,14 @@ namespace SNBS.Licensing.Tests
 
             Assert.AreEqual(license.Key, "AAAAA-AAAAA-AAAAA-AAAAA-AAAAA", "Incorrect key");
             Assert.AreEqual(license.Usability, LicenseUsability.Usable, "Incorrect usability");
-            Assert.AreEqual(license.Expiration, new DateTime(2024, 12, 30), "Incorrect expiration date");
+            Assert.AreEqual(license.Expiration, DateTime.Today.AddYears(1), "Incorrect expiration date");
             Assert.AreEqual(license.Type, LicenseType.Professional, "Incorrect type");
         }
 
         [TestMethod]
         public void CannotTakeInvalidLicense()
         {
-            regKey.SetValue("CurrentKey", "BBBBB-BBBBB-BBBBB-BBBBB-BBBBB");
+            regKey.SetValue("CurrentKey", "YYYYY-YYYYY-YYYYY-YYYYY-YYYYY");
 
             var license = CreateClient().GetCurrentLicense();
 
@@ -131,7 +131,7 @@ namespace SNBS.Licensing.Tests
         [TestMethod]
         public void CanStartWithInvalidLicense()
         {
-            regKey.SetValue("CurrentKey", "BBBBB-BBBBB-BBBBB-BBBBB-BBBBB");
+            regKey.SetValue("CurrentKey", "YYYYY-YYYYY-YYYYY-YYYYY-YYYYY");
 
             LicensingClient.Start(
                 connectionString,

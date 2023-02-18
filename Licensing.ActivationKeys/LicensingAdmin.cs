@@ -259,6 +259,18 @@ namespace SNBS.Licensing
             DeleteOldLicenses(backDateTo);
         }
 
+        /// <summary>
+        /// Clears the cache (storing records from the licenses database) of the current <see cref="LicenseValidator"/> instance. This method is typically used to load new contents from the database.
+        /// </summary>
+        /// <exception cref="DatabaseException">
+        /// Thrown if there's an issue accessing the licenses database.
+        /// </exception>
+        public void Refresh()
+        {
+            context.Dispose();
+            context = new(connectionString, useMySql, mySqlVersion);
+        }
+
 #region Async
         /// <summary>
         /// Asynchronously adds a new license to the database.
@@ -350,6 +362,51 @@ namespace SNBS.Licensing
         public Task<LicenseInfo> DeleteLicenseAsync(string key)
         {
             return Task.Run(() => DeleteLicense(key));
+        }
+
+        /// <summary>
+        /// Asynchronously finds licenses that have expired more than the specified number of days ago and deletes them.
+        /// </summary>
+        /// <param name="days">
+        /// A license must have expired this number of days ago to be deleted.
+        /// </param>
+        /// <exception cref="ObjectDisposedException">
+        /// Thrown if the current <see cref="LicensingClient"/> instance was disposed.
+        /// </exception>
+        /// <exception cref="DatabaseException">
+        /// Thrown if there's an issue connecting to the licenses database.
+        /// </exception>
+        public Task DeleteOldLicensesAsync(short days)
+        {
+            return Task.Run(() => DeleteOldLicenses(days));
+        }
+
+        /// <summary>
+        /// Asynchronously finds licenses with expiration date earlier than specified in parameter <paramref name="backDateTo"/> (usually that's old, expired, no longer needed licenses) and deletes them.
+        /// </summary>
+        /// <param name="backDateTo">
+        /// The maximum expiration date a license needs to have to be deleted.
+        /// </param>
+        /// <exception cref="ObjectDisposedException">
+        /// Thrown if the current <see cref="LicensingClient"/> instance was disposed.
+        /// </exception>
+        /// <exception cref="DatabaseException">
+        /// Thrown if there's an issue connecting to the licenses database.
+        /// </exception>
+        public Task DeleteOldLicensesAsync(DateTime backDateTo)
+        {
+            return Task.Run(() => DeleteOldLicenses(backDateTo));
+        }
+
+        /// <summary>
+        /// Clears the cache (storing records from the licenses database) of the current <see cref="LicenseValidator"/> instance. This method is typically used to load new contents from the database.
+        /// </summary>
+        /// <exception cref="DatabaseException">
+        /// Thrown if there's an issue accessing the licenses database.
+        /// </exception>
+        public Task RefreshAsync()
+        {
+            return Task.Run(Refresh);
         }
 #endregion
 

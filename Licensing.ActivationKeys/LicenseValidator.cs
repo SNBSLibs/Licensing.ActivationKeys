@@ -83,7 +83,7 @@ namespace SNBS.Licensing
             {
                 ThrowHelper.DatabaseError(ex);
             }
-
+            
             if (license == null)
             {
                 return new(null, LicenseUsability.NotFound);
@@ -103,6 +103,18 @@ namespace SNBS.Licensing
                     return new(license, LicenseUsability.Usable);
                 }
             }
+        }
+
+        /// <summary>
+        /// Clears the cache (storing records from the licenses database) of the current <see cref="LicenseValidator"/> instance. This method is typically used to load new contents from the database.
+        /// </summary>
+        /// <exception cref="DatabaseException">
+        /// Thrown if there's an issue accessing the licenses database.
+        /// </exception>
+        public void Refresh()
+        {
+            context.Dispose();
+            context = new(connectionString, useMySql, mySqlVersion);
         }
 
         /// <summary>
@@ -132,6 +144,17 @@ namespace SNBS.Licensing
         public Task<LicenseInfo> ValidateLicenseAsync(string key)
         {
             return Task.Run(() => ValidateLicense(key));
+        }
+
+        /// <summary>
+        /// Clears the cache (storing records from the licenses database) of the current <see cref="LicenseValidator"/> instance. This method is typically used to load new contents from the database.
+        /// </summary>
+        /// <exception cref="DatabaseException">
+        /// Thrown if there's an issue accessing the licenses database.
+        /// </exception>
+        public Task RefreshAsync()
+        {
+            return Task.Run(Refresh);
         }
 #endregion
 

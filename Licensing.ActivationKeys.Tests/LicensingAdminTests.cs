@@ -59,5 +59,21 @@ namespace SNBS.Licensing.Tests
 
             Assert.AreEqual(validatorInfo.Usability, LicenseUsability.NotFound, "The license still exists");
         }
+
+        [TestMethod]
+        public void CanDeleteOldLicenses()
+        {
+            var validator = CreateValidator();
+            var oldValidatorInfo = validator.ValidateLicense("BBBBB-BBBBB-BBBBB-BBBBB-BBBBB");
+
+            CreateAdmin().DeleteOldLicenses(7);
+
+            validator.Refresh();
+
+            var newValidatorInfo = validator.ValidateLicense("BBBBB-BBBBB-BBBBB-BBBBB-BBBBB");
+
+            Assert.AreEqual(oldValidatorInfo.Usability, LicenseUsability.Expired, "Incorrect old usability");
+            Assert.AreEqual(newValidatorInfo.Usability, LicenseUsability.NotFound, "Incorrect new usability");
+        }
     }
 }
