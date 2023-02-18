@@ -216,7 +216,7 @@ INSERT INTO [Licenses] ([Key],
                         [UsingDevices],
                         [MaxDevices])
 VALUES ('AAAAA-AAAAA-AAAAA-AAAAA-AAAAA',
-        GETDATE() + INTERVAL '365 0:0:0' DAY TO SECOND,
+        GETDATE() + '365 0:0:0',
         'Professional',
         0,
         3);
@@ -231,7 +231,7 @@ INSERT INTO [Licenses] ([Key],
                         [UsingDevices],
                         [MaxDevices])
 VALUES ('BBBBB-BBBBB-BBBBB-BBBBB-BBBBB',
-        GETDATE() - INTERVAL '15 0:0:0' DAY TO SECOND,
+        GETDATE() - '15 0:0:0',
         'General',
         0,
         1);
