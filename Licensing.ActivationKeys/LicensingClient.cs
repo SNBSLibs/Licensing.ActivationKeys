@@ -311,49 +311,6 @@ namespace SNBS.Licensing
         }
 
         /// <summary>
-        /// Finds licenses with expiration date earlier than specified in parameter <paramref name="backDateTo"/> (usually that's old, expired, no longer needed licenses) and deletes them.
-        /// </summary>
-        /// <param name="backDateTo">
-        /// The maximum expiration date a license needs to have to be deleted.
-        /// </param>
-        /// <exception cref="ObjectDisposedException">
-        /// Thrown if the current <see cref="LicensingClient"/> instance was disposed.
-        /// </exception>
-        /// <exception cref="DatabaseException">
-        /// Thrown if there's an issue connecting to the licenses database.
-        /// </exception>
-        public void DeleteOldLicenses(DateTime backDateTo)
-        {
-            Check.Disposed(isDisposed, this);
-
-            context.Licenses.RemoveRange
-                (context.Licenses.Where(l => l.Expiration <= backDateTo));
-
-
-            ChangesSaver.SaveChanges(context);
-        }
-
-        /// <summary>
-        /// Finds licenses that have expired more than the specified number of days ago and deletes them.
-        /// </summary>
-        /// <param name="days">
-        /// A license must have expired this number of days ago to be deleted.
-        /// </param>
-        /// <exception cref="ObjectDisposedException">
-        /// Thrown if the current <see cref="LicensingClient"/> instance was disposed.
-        /// </exception>
-        /// <exception cref="DatabaseException">
-        /// Thrown if there's an issue connecting to the licenses database.
-        /// </exception>
-        public void DeleteOldLicenses(short days)
-        {
-            Check.Disposed(isDisposed, this);
-
-            var backDateTo = DateTime.Today - TimeSpan.FromDays(days);
-            DeleteOldLicenses(backDateTo);
-        }
-
-        /// <summary>
         /// Casts a <see cref="LicensingClient"/> instance to a <see cref="LicenseValidator"/> instance. 
         /// </summary>
         /// <param name="client">
