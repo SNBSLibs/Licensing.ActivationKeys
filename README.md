@@ -216,10 +216,23 @@ INSERT INTO [Licenses] ([Key],
                         [UsingDevices],
                         [MaxDevices])
 VALUES ('AAAAA-AAAAA-AAAAA-AAAAA-AAAAA',
-        '2024-12-30',
+        DATEADD(YEAR, 1, GETDATE()),
         'Professional',
         0,
         3);
 ```
 
-**Unit tests in class `LicensingAdminTests` should be ran one-by-one! Test `CanUpdateLicense` should be ran before test `CanDeleteLicense`, and test `CanCreateLicense` — before test `CanDeleteOldLicenses`!**
+**Unit tests in class `LicensingAdminTests` should be ran one-by-one! Test `CanUpdateLicense` should be ran before test `CanDeleteLicense`, and test `CanCreateLicense` — before test `CanDeleteOldLicenses`! Before running test `CanDeleteOldLicenses` run this query to your licenses database!**
+
+```sql
+INSERT INTO [Licenses] ([Key],
+                        [Expiration],
+                        [Type],
+                        [UsingDevices],
+                        [MaxDevices])
+VALUES ('BBBBB-BBBBB-BBBBB-BBBBB-BBBBB',
+        DATEADD(DAY, -15, GETDATE()),
+        'General',
+        0,
+        1);
+```

@@ -1,5 +1,6 @@
 ﻿#pragma warning disable CS8618
 
+using Azure.Core;
 using Microsoft.Win32;
 using SNBS.Licensing.Entities;
 using SNBS.Licensing.Entities.Exceptions;
@@ -68,6 +69,8 @@ namespace SNBS.Licensing
             {
                 ThrowHelper.RegistryInaccessible(ex, @"SOFTWARE\SNBS\ActivationKeysLicensing\" + productName);
             }
+
+            _ = GetCurrentLicense();
         }
 
         /// <summary>
@@ -137,15 +140,12 @@ namespace SNBS.Licensing
                 validationResult.License.UsingDevices++;
 #pragma warning restore CS8602
 
-                try
-                {
-                    context.SaveChanges();
-                } catch (Exception ex)
-                {
-                    ThrowHelper.DatabaseError(ex);
-                }
+                ChangesSaver.SaveChanges(context);
 
                 regKey.SetValue("CurrentKey", key);
+#pragma warning disable CS8604
+                regKey.SetValue("Expiration", validationResult.Expiration?.ToShortDateString());
+#pragma warning restore CS8604
             }
 
             return validationResult;
@@ -174,13 +174,7 @@ namespace SNBS.Licensing
             if (currentLicense.UsingDevices > 0)
                 currentLicense.UsingDevices--;
 
-            try
-            {
-                context.SaveChanges();
-            } catch (Exception ex)
-            {
-                ThrowHelper.DatabaseError(ex);
-            }
+            ChangesSaver.SaveChanges(context);
         }
 
         /// <summary>
@@ -206,7 +200,29 @@ namespace SNBS.Licensing
                 return new(null, LicenseUsability.NoConfiguredLicense);
             }
 
-            return validator.ValidateLicense(key);
+            var info = validator.ValidateLicense(key);
+
+            if (info.Usability == LicenseUsability.NotFound)
+            {
+                var regExpiration = regKey.GetValue("Expiration") as string;
+
+                DateTime regExpirationDT;
+                if (regExpiration != null &&
+                    DateTime.TryParse(regExpiration, out regExpirationDT))
+                {
+                    if (regExpirationDT <= DateTime.Today) info.Usability =
+                        LicenseUsability.Expired;
+                }
+            }
+
+            if (info.Usability == LicenseUsability.Usable)
+            {
+#pragma warning disable CS8604
+                regKey.SetValue("Expiration", info.Expiration?.ToShortDateString());
+#pragma warning disable CS8604
+            }
+
+            return info;
         }
 
         /// <summary>
@@ -316,6 +332,18 @@ namespace SNBS.Licensing
             return new(client.connectionString, client.useMySql, client.mySqlVersion);
         }
 
+        /// <summary>
+        /// Clears the cache (storing records from the licenses database) of the current <see cref="LicenseValidator"/> instance. This method is typically used to load new contents from the database.
+        /// </summary>
+        /// <exception cref="DatabaseException">
+        /// Thrown if there's an issue accessing the licenses database.
+        /// </exception>
+        public void Refresh()
+        {
+            context.Dispose();
+            context = new(connectionString, useMySql, mySqlVersion);
+        }
+
 #region Async
         /// <summary>
         /// Asynchronously etches information about the license with the key specified. If it is usable, configures it in the registry.
@@ -368,7 +396,18 @@ namespace SNBS.Licensing
         {
             return Task.Run(() => DeactivateProduct());
         }
-        #endregion
+
+        /// <summary>
+        /// Clears the cache (storing records from the licenses database) of the current <see cref="LicenseValidator"/> instance. This method is typically used to load new contents from the database.
+        /// </summary>
+        /// <exception cref="DatabaseException">
+        /// Thrown if there's an issue accessing the licenses database.
+        /// </exception>
+        public Task RefreshAsync()
+        {
+            return Task.Run(Refresh);
+        }
+#endregion
 
         /// <summary>
         /// Releases all resources used by the current <see cref="LicensingClient"/> instance.

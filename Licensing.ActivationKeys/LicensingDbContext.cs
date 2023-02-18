@@ -20,13 +20,10 @@ namespace SNBS.Licensing
             this.useMySql = useMySql;
             this.mySqlVersion = mySqlVersion;
 
-            Database.EnsureCreated();
-
             try { _ = Licenses?.Find("AAAAA-AAAAA-AAAAA-AAAAA-AAAAA"); }
-            catch (Exception ex)
-            {
-                ThrowHelper.DatabaseError(ex);
-            }
+            catch (ArgumentException ex) { ThrowHelper.DatabaseError(ex); }
+
+            Database.EnsureCreated();
         }
 
         public DbSet<Entities.License> Licenses { get; set; }

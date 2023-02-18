@@ -92,13 +92,7 @@ namespace SNBS.Licensing
 
             context.Licenses.Add(license);
 
-            try
-            {
-                context.SaveChanges();
-            } catch (Exception ex)
-            {
-                ThrowHelper.DatabaseError(ex);
-            }
+            ChangesSaver.SaveChanges(context);
 
             return new(license, GetUsability(license));
         }
@@ -163,13 +157,7 @@ namespace SNBS.Licensing
             }
             if (type != null) license.Type = (LicenseType)type;
 
-            try
-            {
-                context.SaveChanges();
-            } catch (Exception ex)
-            {
-                ThrowHelper.DatabaseError(ex);
-            }
+            ChangesSaver.SaveChanges(context);
 
             return new(license, GetUsability(license));
         }
@@ -212,13 +200,7 @@ namespace SNBS.Licensing
 
             context.Licenses.Remove(license);
 
-            try
-            {
-                context.SaveChanges();
-            } catch (Exception ex)
-            {
-                ThrowHelper.DatabaseError(ex);
-            }
+            ChangesSaver.SaveChanges(context);
 
             return new(license, GetUsability(license));
         }
@@ -232,6 +214,61 @@ namespace SNBS.Licensing
         public static explicit operator LicenseValidator(LicensingAdmin admin)
         {
             return new(admin.connectionString, admin.useMySql, admin.mySqlVersion);
+        }
+
+        /// <summary>
+        /// Finds licenses with expiration date earlier than specified in parameter <paramref name="backDateTo"/> (usually that's old, expired, no longer needed licenses) and deletes them.
+        /// </summary>
+        /// <param name="backDateTo">
+        /// The maximum expiration date a license needs to have to be deleted.
+        /// </param>
+        /// <exception cref="ObjectDisposedException">
+        /// Thrown if the current <see cref="LicensingClient"/> instance was disposed.
+        /// </exception>
+        /// <exception cref="DatabaseException">
+        /// Thrown if there's an issue connecting to the licenses database.
+        /// </exception>
+        public void DeleteOldLicenses(DateTime backDateTo)
+        {
+            Check.Disposed(isDisposed, this);
+
+            context.Licenses.RemoveRange
+                (context.Licenses.Where(l => l.Expiration <= backDateTo));
+
+
+            ChangesSaver.SaveChanges(context);
+        }
+
+        /// <summary>
+        /// Finds licenses that have expired more than the specified number of days ago and deletes them.
+        /// </summary>
+        /// <param name="days">
+        /// A license must have expired this number of days ago to be deleted.
+        /// </param>
+        /// <exception cref="ObjectDisposedException">
+        /// Thrown if the current <see cref="LicensingClient"/> instance was disposed.
+        /// </exception>
+        /// <exception cref="DatabaseException">
+        /// Thrown if there's an issue connecting to the licenses database.
+        /// </exception>
+        public void DeleteOldLicenses(short days)
+        {
+            Check.Disposed(isDisposed, this);
+
+            var backDateTo = DateTime.Today - TimeSpan.FromDays(days);
+            DeleteOldLicenses(backDateTo);
+        }
+
+        /// <summary>
+        /// Clears the cache (storing records from the licenses database) of the current <see cref="LicenseValidator"/> instance. This method is typically used to load new contents from the database.
+        /// </summary>
+        /// <exception cref="DatabaseException">
+        /// Thrown if there's an issue accessing the licenses database.
+        /// </exception>
+        public void Refresh()
+        {
+            context.Dispose();
+            context = new(connectionString, useMySql, mySqlVersion);
         }
 
 #region Async
@@ -325,6 +362,51 @@ namespace SNBS.Licensing
         public Task<LicenseInfo> DeleteLicenseAsync(string key)
         {
             return Task.Run(() => DeleteLicense(key));
+        }
+
+        /// <summary>
+        /// Asynchronously finds licenses that have expired more than the specified number of days ago and deletes them.
+        /// </summary>
+        /// <param name="days">
+        /// A license must have expired this number of days ago to be deleted.
+        /// </param>
+        /// <exception cref="ObjectDisposedException">
+        /// Thrown if the current <see cref="LicensingClient"/> instance was disposed.
+        /// </exception>
+        /// <exception cref="DatabaseException">
+        /// Thrown if there's an issue connecting to the licenses database.
+        /// </exception>
+        public Task DeleteOldLicensesAsync(short days)
+        {
+            return Task.Run(() => DeleteOldLicenses(days));
+        }
+
+        /// <summary>
+        /// Asynchronously finds licenses with expiration date earlier than specified in parameter <paramref name="backDateTo"/> (usually that's old, expired, no longer needed licenses) and deletes them.
+        /// </summary>
+        /// <param name="backDateTo">
+        /// The maximum expiration date a license needs to have to be deleted.
+        /// </param>
+        /// <exception cref="ObjectDisposedException">
+        /// Thrown if the current <see cref="LicensingClient"/> instance was disposed.
+        /// </exception>
+        /// <exception cref="DatabaseException">
+        /// Thrown if there's an issue connecting to the licenses database.
+        /// </exception>
+        public Task DeleteOldLicensesAsync(DateTime backDateTo)
+        {
+            return Task.Run(() => DeleteOldLicenses(backDateTo));
+        }
+
+        /// <summary>
+        /// Clears the cache (storing records from the licenses database) of the current <see cref="LicenseValidator"/> instance. This method is typically used to load new contents from the database.
+        /// </summary>
+        /// <exception cref="DatabaseException">
+        /// Thrown if there's an issue accessing the licenses database.
+        /// </exception>
+        public Task RefreshAsync()
+        {
+            return Task.Run(Refresh);
         }
 #endregion
 
