@@ -222,4 +222,4 @@ VALUES ('AAAAA-AAAAA-AAAAA-AAAAA-AAAAA',
         3);
 ```
 
-**Unit tests in class `LicensingAdminTests` should be ran one-by-one, and test `CanUpdateLicense` should be ran before test `CanDeleteLicense`!**
+**Unit tests in class `LicensingAdminTests` should be ran one-by-one! Test `CanUpdateLicense` should be ran before test `CanDeleteLicense`, and test `CanCreateLicense` — before test `CanDeleteOldLicenses`!**
