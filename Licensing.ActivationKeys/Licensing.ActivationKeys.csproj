@@ -8,15 +8,15 @@
     <RootNamespace>SNBS.Licensing</RootNamespace>
     <Title>Licensing.ActivationKeys</Title>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <Authors>SNBS</Authors>
     <Description>This free, open-source .NET library allows you to license your non-free applications through activation keys.</Description>
     <Copyright>Copyright (c) 2023 SNBS</Copyright>
     <PackageProjectUrl>https://github.com/SNBSLibs/Licensing.ActivationKeys</PackageProjectUrl>
     <RepositoryUrl>https://github.com/SNBSLibs/Licensing.ActivationKeys</RepositoryUrl>
     <PackageTags>licensing;security;dotnet;license-management</PackageTags>
-    <AssemblyVersion>1.1.0</AssemblyVersion>
-    <FileVersion>1.1.0</FileVersion>
+    <AssemblyVersion>1.2.0</AssemblyVersion>
+    <FileVersion>1.2.0</FileVersion>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageReadmeFile>README.md</PackageReadmeFile>

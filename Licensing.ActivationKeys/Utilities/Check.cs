@@ -4,7 +4,7 @@ namespace SNBS.Licensing.Utilities
 {
     internal static class Check
     {
-        private const string keyPattern = @"^([A-Z]|[0-9])+-([A-Z]|[0-9])+-([A-Z]|[0-9])+-([A-Z]|[0-9])+-([A-Z]|[0-9])+$";
+        private const string keyPattern = @"^([A-Z]|[a-z]|[0-9])+-([A-Z]|[a-z]|[0-9])+-([A-Z]|[a-z]|[0-9])+-([A-Z]|[a-z]|[0-9])+-([A-Z]|[a-z]|[0-9])+$";
 
         internal static void Disposed(bool isDisposed, object obj)
         {

@@ -22,6 +22,7 @@ namespace SNBS.Licensing
 
             try { _ = Licenses?.Find("AAAAA-AAAAA-AAAAA-AAAAA-AAAAA"); }
             catch (ArgumentException ex) { ThrowHelper.DatabaseError(ex); }
+            catch (Exception) { }
 
             Database.EnsureCreated();
         }
