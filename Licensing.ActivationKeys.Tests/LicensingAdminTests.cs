@@ -8,6 +8,8 @@ namespace SNBS.Licensing.Tests
 {
     // BEFORE RUNNING THESE TESTS, RUN LicenseValidatorTests.
     // BECAUSE THIS CLASS USES IT TO CHECK THE DATABASE CONTENTS.
+    // THESE TESTS SHOULD BE RAN ONE-BY-ONE, IN THE ORDER IN WHICH
+    // THEY ARE.
     [TestClass]
     public class LicensingAdminTests
     {
