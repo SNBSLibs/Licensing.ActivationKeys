@@ -1,3 +1,4 @@
+using System.Reflection.Metadata;
 using Microsoft.Win32;
 using SNBS.Licensing.Entities.Exceptions;
 
@@ -7,7 +8,7 @@ namespace SNBS.Licensing.Tests
     public class LicensingClientTests
     {
         private const string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Integrated Security=True;MultipleActiveResultSets=true;Initial Catalog=Licensing.ActivationKeys.Tests";
-        private RegistryKey regKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\SNBS\ActivationKeysLicensing\Licensing.ActivationKeys.Tests");
+        private RegistryKey regKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\SNBS\Licensing.ActivationKeys\Licensing.ActivationKeys.Tests");
 
         private LicensingClient CreateClient()
         {
@@ -24,23 +25,30 @@ namespace SNBS.Licensing.Tests
         {
             var result = CreateClient().ActivateProduct("AAAAA-AAAAA-AAAAA-AAAAA-AAAAA");
 
-            string? regValue = regKey.GetValue("CurrentKey") as string;
-        
-            Assert.IsFalse(string.IsNullOrEmpty(regValue), "The value in registry is empty");
-            Assert.AreEqual(regValue, "AAAAA-AAAAA-AAAAA-AAAAA-AAAAA", "Invalid value in registry");
+            string? regKey = this.regKey.GetValue("CurrentKey") as string;
+            string? regExpiration = this.regKey.GetValue("Expiration") as string;
+
+            Assert.AreEqual(result.Usability, LicenseUsability.Usable, "Incorrect usability");
+            Assert.IsFalse(string.IsNullOrEmpty(regKey), "The key in registry is empty");
+            Assert.IsFalse(string.IsNullOrEmpty(regExpiration), "The expiration in registry is empty");
+            Assert.AreEqual(regKey, "AAAAA-AAAAA-AAAAA-AAAAA-AAAAA", "Invalid key in registry");
+            Assert.AreEqual(regExpiration, DateTime.Today.AddYears(1).ToShortDateString(), "Invalid expiration in registry");
         }
 
         [TestMethod]
         public void CannotActivateInvalidLicense()
         {
-            regKey.SetValue("CurrentKey", string.Empty);
+            this.regKey.SetValue("CurrentKey", string.Empty);
+            this.regKey.SetValue("Expiration", string.Empty);
 
             var result = CreateClient().ActivateProduct("YYYYY-YYYYY-YYYYY-YYYYY-YYYYY");
 
-            string? regValue = regKey.GetValue("CurrentKey") as string;
+            string? regKey = this.regKey.GetValue("CurrentKey") as string;
+            string? regExpiration = this.regKey.GetValue("Expiration") as string;
 
             Assert.AreEqual(result.Usability, LicenseUsability.NotFound, "Incorrect usability");
-            Assert.IsTrue(string.IsNullOrEmpty(regValue), "The value in registry is not empty");
+            Assert.IsTrue(string.IsNullOrEmpty(regKey), "The key in registry is not empty");
+            Assert.IsTrue(string.IsNullOrEmpty(regExpiration), "The expiration in registry is not empty");
         }
 
         [TestMethod]
@@ -163,7 +171,7 @@ namespace SNBS.Licensing.Tests
             client.ProductName = "Licensing.ActivationKeys.Tests";
             // Other tests expect it to be open
             regKey = Registry.LocalMachine.CreateSubKey
-                (@"SOFTWARE\SNBS\ActivationKeysLicensing\Licensing.ActivationKeys.Tests");
+                (@"SOFTWARE\SNBS\Licensing.ActivationKeys\Licensing.ActivationKeys.Tests");
         }
 
         [TestMethod]
@@ -178,10 +186,21 @@ namespace SNBS.Licensing.Tests
         }
 
         [TestMethod]
+        public void CanPreserveExpirationDate()
+        {
+            regKey.SetValue("CurrentKey", "YYYYY-YYYYY-YYYYY-YYYYY-YYYYY");
+            regKey.SetValue("Expiration", new DateTime(0).ToShortDateString());
+
+            var result = CreateClient().GetCurrentLicense();
+
+            Assert.AreEqual(result.Usability, LicenseUsability.Expired, "Incorrect usability");
+        }
+        
+        [TestMethod]
         [ExpectedException(typeof(FormatException))]
         public void CanValidateKey()
         {
-            CreateClient().ActivateProduct("AAAAA-AAAaA-AAAAA-AAAAA-AAAAA");
+            CreateClient().ActivateProduct("AAAAA-AAA%A-AAAAA-AAAAA-AAAAA");
         }
     }
 }

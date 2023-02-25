@@ -1,6 +1,5 @@
 ﻿#pragma warning disable CS8618
 
-using Azure.Core;
 using Microsoft.Win32;
 using SNBS.Licensing.Entities;
 using SNBS.Licensing.Entities.Exceptions;
@@ -64,10 +63,10 @@ namespace SNBS.Licensing
 
             try
             {
-                this.regKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\SNBS\ActivationKeysLicensing\" + productName);
+                this.regKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\SNBS\Licensing.ActivationKeys\" + productName);
             } catch (UnauthorizedAccessException ex)
             {
-                ThrowHelper.RegistryInaccessible(ex, @"SOFTWARE\SNBS\ActivationKeysLicensing\" + productName);
+                ThrowHelper.RegistryInaccessible(ex, @"SOFTWARE\SNBS\Licensing.ActivationKeys\" + productName);
             }
 
             _ = GetCurrentLicense();

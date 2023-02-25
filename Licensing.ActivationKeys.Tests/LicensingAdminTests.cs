@@ -64,16 +64,20 @@ namespace SNBS.Licensing.Tests
         public void CanDeleteOldLicenses()
         {
             var validator = CreateValidator();
-            var oldValidatorInfo = validator.ValidateLicense("BBBBB-BBBBB-BBBBB-BBBBB-BBBBB");
+            var oldValidatorInfo1 = validator.ValidateLicense("BBBBB-BBBBB-BBBBB-BBBBB-BBBBB");
+            var oldValidatorInfo2 = validator.ValidateLicense("CCCCC-CCCCC-CCCCC-CCCCC-CCCCC");
 
             CreateAdmin().DeleteOldLicenses(7);
 
             validator.Refresh();
 
-            var newValidatorInfo = validator.ValidateLicense("BBBBB-BBBBB-BBBBB-BBBBB-BBBBB");
+            var newValidatorInfo1 = validator.ValidateLicense("BBBBB-BBBBB-BBBBB-BBBBB-BBBBB");
+            var newValidatorInfo2 = validator.ValidateLicense("CCCCC-CCCCC-CCCCC-CCCCC-CCCCC");
 
-            Assert.AreEqual(oldValidatorInfo.Usability, LicenseUsability.Expired, "Incorrect old usability");
-            Assert.AreEqual(newValidatorInfo.Usability, LicenseUsability.NotFound, "Incorrect new usability");
+            Assert.AreEqual(oldValidatorInfo1.Usability, LicenseUsability.Expired, "Incorrect old-1 usability");
+            Assert.AreEqual(oldValidatorInfo2.Usability, LicenseUsability.Expired, "Incorrect old-2 usability");
+            Assert.AreEqual(newValidatorInfo1.Usability, LicenseUsability.NotFound, "Incorrect new-1 usability");
+            Assert.AreEqual(newValidatorInfo2.Usability, LicenseUsability.Expired, "Incorrect new-2 usability");
         }
     }
 }
