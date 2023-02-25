@@ -216,32 +216,4 @@ await client.ActivateProductAsync("AAAAA-AAAAA-AAAAA-AAAAA-AAAAA");
 
 ## Tests
 
-The unit tests need an empty LocalDB database. First, let this library create it, then run the following query to add a test record:
-
-```sql
-INSERT INTO [Licenses] ([Key],
-                        [Expiration],
-                        [Type],
-                        [UsingDevices],
-                        [MaxDevices])
-VALUES ('AAAAA-AAAAA-AAAAA-AAAAA-AAAAA',
-        DATEADD(YEAR, 1, GETDATE()),
-        'Professional',
-        0,
-        3);
-```
-
-**Unit tests in class `LicensingAdminTests` should be ran one-by-one! Test `CanUpdateLicense` should be ran before test `CanDeleteLicense`, and test `CanCreateLicense` — before test `CanDeleteOldLicenses`! Before running test `CanDeleteOldLicenses` run this query to your licenses database!**
-
-```sql
-INSERT INTO [Licenses] ([Key],
-                        [Expiration],
-                        [Type],
-                        [UsingDevices],
-                        [MaxDevices])
-VALUES ('BBBBB-BBBBB-BBBBB-BBBBB-BBBBB',
-        DATEADD(DAY, -15, GETDATE()),
-        'General',
-        0,
-        1);
-```
+The unit tests need an empty LocalDB database. First, let this library create it, then navigate to folder `Licensing.ActivationKeys.Tests/Queries` in this repository and run query `PopulateSQLServer.sql` in it to your database if your DBMS is MS SQL Server. If it's MySQL, run query `PopulateMySQL.sql` in the same folder. **Follow instructions in comments in the tests!**
