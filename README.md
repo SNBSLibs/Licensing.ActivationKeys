@@ -1,3 +1,5 @@
+**Anybody using this library is kindly asked to visit [issue #9](https://github.com/SNBSLibs/Licensing.ActivationKeys/issues/9) and comment it to tell me if renewal keys support is worth adding. Waiting for your votes!**
+
 # Licensing library from SNBS
 
 Free. Easy to use. No license files. **Everything is XML-documented in the code, so IntelliSense can show you all info about any member.**
