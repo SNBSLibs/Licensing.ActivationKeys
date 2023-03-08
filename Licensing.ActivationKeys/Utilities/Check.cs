@@ -4,7 +4,7 @@ namespace SNBS.Licensing.Utilities
 {
     internal static class Check
     {
-        private const string keyPattern = @"^([A-Z]|[a-z]|[0-9])+-([A-Z]|[a-z]|[0-9])+-([A-Z]|[a-z]|[0-9])+-([A-Z]|[a-z]|[0-9])+-([A-Z]|[a-z]|[0-9])+$";
+        private const string keyPattern = @"([A-Z]|[a-z]|[0-9])+-([A-Z]|[a-z]|[0-9])+-([A-Z]|[a-z]|[0-9])+-([A-Z]|[a-z]|[0-9])+-([A-Z]|[a-z]|[0-9])+";
 
         internal static void Disposed(bool isDisposed, object obj)
         {
@@ -28,7 +28,7 @@ namespace SNBS.Licensing.Utilities
             var match = Regex.Match(key, keyPattern,
                 RegexOptions.ExplicitCapture | RegexOptions.CultureInvariant);
 
-            if (!match.Success) ThrowHelper.InvalidKey();
+            if (!match.Success || match.Index != 0 || match.Length != 29) ThrowHelper.InvalidKey();
         }
     }
 }

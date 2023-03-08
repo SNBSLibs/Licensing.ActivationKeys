@@ -6,7 +6,7 @@ namespace SNBS.Licensing.Entities
     {
         [Key]
         [Required]
-        [RegularExpression(@"(?:[A-Z]|[0-9])+-(?:[A-Z]|[0-9])+-(?:[A-Z]|[0-9])+-(?:[A-Z]|[0-9])+-(?:[A-Z]|[0-9])+")]
+        [RegularExpression(@"(?:[A-Z]|[a-z]|[0-9])+-(?:[A-Z]|[a-z]|[0-9])+-(?:[A-Z]|[a-z]|[0-9])+-(?:[A-Z]|[a-z]|[0-9])+-(?:[A-Z]|[a-z]|[0-9])+")]
         [StringLength(29, MinimumLength = 29)]
         public string? Key { get; set; }
 

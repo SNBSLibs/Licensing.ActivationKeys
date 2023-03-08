@@ -332,20 +332,22 @@ namespace SNBS.Licensing
         }
 
         /// <summary>
-        /// Clears the cache (storing records from the licenses database) of the current <see cref="LicenseValidator"/> instance. This method is typically used to load new contents from the database.
+        /// Clears the cache (storing records from the licenses database) of the current <see cref="LicensingClient"/> instance. This method is typically used to load new contents from the database.
         /// </summary>
         /// <exception cref="DatabaseException">
         /// Thrown if there's an issue accessing the licenses database.
         /// </exception>
         public void Refresh()
         {
+            validator.Refresh();
+
             context.Dispose();
             context = new(connectionString, useMySql, mySqlVersion);
         }
 
 #region Async
         /// <summary>
-        /// Asynchronously etches information about the license with the key specified. If it is usable, configures it in the registry.
+        /// Asynchronously fetches information about the license with the key specified. If it is usable, configures it in the registry.
         /// </summary>
         /// <param name="key">Key of the license.</param>
         /// <returns>

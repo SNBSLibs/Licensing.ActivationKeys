@@ -260,7 +260,7 @@ namespace SNBS.Licensing
         }
 
         /// <summary>
-        /// Clears the cache (storing records from the licenses database) of the current <see cref="LicenseValidator"/> instance. This method is typically used to load new contents from the database.
+        /// Clears the cache (storing records from the licenses database) of the current <see cref="LicensingAdmin"/> instance. This method is typically used to load new contents from the database.
         /// </summary>
         /// <exception cref="DatabaseException">
         /// Thrown if there's an issue accessing the licenses database.

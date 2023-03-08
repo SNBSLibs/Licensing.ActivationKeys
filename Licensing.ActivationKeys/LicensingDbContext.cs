@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using SNBS.Licensing.Utilities;
 
 namespace SNBS.Licensing
@@ -21,8 +22,8 @@ namespace SNBS.Licensing
             this.mySqlVersion = mySqlVersion;
 
             try { _ = Licenses?.Find("AAAAA-AAAAA-AAAAA-AAAAA-AAAAA"); }
-            catch (ArgumentException ex) { ThrowHelper.DatabaseError(ex); }
-            catch (Exception) { }
+            catch (SqlException) { }
+            catch (Exception ex) { ThrowHelper.DatabaseError(ex); }
 
             Database.EnsureCreated();
         }
