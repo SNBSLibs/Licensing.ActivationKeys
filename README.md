@@ -2,9 +2,11 @@
 
 # Licensing library from SNBS
 
-Free. Easy to use. No license files. **Everything is XML-documented in the code, so IntelliSense can show you all info about any member.**
+This free, open-source .NET library allows you to license your non-free applications through activation keys.
 
-If you need to know about all aspects of using this library, or you want to test it, consider the directory `Licensing.ActivationKeys.Tests` containing the unit tests created for this library.
+*Free. Easy to use. No license files. Everything is XML-documented in the code, so IntelliSense can show you all info about any member.*
+
+If you want to know about all aspects of using this library, or you want to test it, consider the directory `Licensing.ActivationKeys.Tests` containing the unit tests created for this library.
 
 ## Installation
 
