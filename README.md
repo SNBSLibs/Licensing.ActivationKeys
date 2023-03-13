@@ -26,7 +26,7 @@ Say, we have an app that isn't completely free, and we want to sell licenses for
 
 1. First, we need a database to store licenses. This library supports MS SQL Server and MySQL. You may use any database hosting from Windows Azure to [FreeSQLDatabase](https://freesqldatabase.com) (uses MySQL 5.0.12). **Not an advertisement. After creating your database will of course be empty, but this library will automatically set it up.** Get a connection string and go to the next step.
 
-2. Then we need to start a `LicensingClient` in the main method. It will decide whether to run the full app version or a message "Not licensed". *Please note that `LicensingClient` opens a registry key in the constructor, and thus it needs admin permissions. If they aren't provided, a `RegistryAccessException` will be thrown. The inaccessible registry key will be stored in the exception data under key `InaccessibleRegistryKey`.*
+2. Then we need to start a `LicensingClient` in the main method. It will decide whether to run the full app version or a message "Not licensed". The decision will depend on the license configuration in registry (see below how to configure a license easily) and on its usability (`LicensingClient` looks up in the database to find out whether the configured activation key is valid). *Please note that `LicensingClient` opens a registry key in the constructor, and thus it needs admin permissions. If they aren't provided, a `RegistryAccessException` will be thrown. The inaccessible registry key will be stored in the exception data under key `InaccessibleRegistryKey`.*
 
 ```c#
 using SNBS.Licensing;
