@@ -18,6 +18,15 @@ Install-Package SNBS.Licensing.ActivationKeys
 
 You can also clone this repository (or download it using the green "Code" button), compile it and add a reference to the compiled assembly in your project.
 
+## Quick start: takes 5 minutes
+
+You can test this library by using the ready code examples in folder `examples`. Download `Admin.cs` and `Client.cs`, compile them into console apps and:
+
+1. Run `Admin.cs` and create a license using its CLI.
+2. Take down the key of the created license.
+3. Apply it using `Client.cs`.
+4. View the current license using `Client.cs`. It will display the parameters you initially entered in `Admin.cs`'s CLI.
+
 ## Examples of usage
 
 ### Using `LicensingClient`
