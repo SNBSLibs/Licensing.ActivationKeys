@@ -72,7 +72,7 @@ while (true) {
 
                 Console.WriteLine($"Key: {info.Key}");
 
-#pragma warning disable CS8604
+#pragma warning disable CS8604   // Suppresses a warning that hasn't got any value when you're using properties of `LicenseInfo` and you're sure the `Usability` property equals to `LicenseUsability.Usable`
 
                 Console.WriteLine($"Expiration: {info.Expiration?.ToLongDateString()}");
 
