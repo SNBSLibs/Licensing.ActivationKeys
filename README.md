@@ -81,6 +81,8 @@ When you create a `LicensingClient` using the constructor, it automatically conn
  
 Let's improve the previous example. Generally, applications should ask the end user to activate them if the current license is not usable. The corresponding method of `LicensingClient` is called `ActivateProduct()`. It returns `LicenseInfo` containing the information about the newly activated license (of course, it's activated only if it's usable).
 
+*Ignore warnings about `null` references when using properties of `LicenseInfo`. If you're sure the `Usability` property equals to `LicenseUsability.Usable`, you can safely suppress them using `pragma`.*
+
  ```c#
 using (var client = new LicensingClient("YourConnectionString", "YourProductName")) {
   var usability = client.GetCurrentLicense().Usability;
@@ -96,7 +98,7 @@ using (var client = new LicensingClient("YourConnectionString", "YourProductName
     var info = client.ActivateProduct(key);
   
     if (info.Usability == LicenseUsability.Usable) {
-      ShowMessage("License successfully activated! Expires at " + info.Expiration.ToShortDateString());
+      ShowMessage("License successfully activated! Expires at " + info.Expiration?.ToShortDateString());
     } else {
       ShowMessage("An error occurred when trying to activate. The license " +
         (info.Usability == LicenseUsability.Expired) ? "has expired" :
