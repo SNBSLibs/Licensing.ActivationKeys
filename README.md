@@ -27,6 +27,8 @@ You can test this library by using the ready code examples in folder `examples`.
 3. Apply it using `Client.cs`.
 4. View the current license using `Client.cs`. It will display the parameters you initially entered in `Admin.cs`'s CLI.
 
+**You don't even need to set up a database. The examples connect to my own one. It's good for quick start, but for commercial use you'd better host a database yourself, e.g. on [FreeSQLDatabase](https://freesqldatabase.com). Not an advertisement.**
+
 ## Examples of usage
 
 ### Using `LicensingClient`
