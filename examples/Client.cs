@@ -93,8 +93,10 @@ while (true) {
             
             switch (info.Usability) {
                 case LicenseUsability.Usable:
+#pragma warning disable CS8604
                     Console.WriteLine("License successfully applied! Expires at " +
-                        info.Expiration.ToLongDateString());
+                        info.Expiration?.ToLongDateString());
+#pragma warning restore CS8604
                 case LicenseUsability.TooManyDevices:
                     Console.WriteLine("The license is used by as many devices as it can " +
                         "be used by, thus a new device cannot use it!");
