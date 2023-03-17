@@ -16,7 +16,6 @@ namespace SNBS.Licensing.Utilities
         internal static void DatabaseError(Exception inner)
         {
             var exception = new DatabaseException(inner);
-            exception.HelpLink = "https://github.com/SNBSLibs/Licensing.ActivationKeys";
 
             throw exception;
         }

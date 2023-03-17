@@ -218,7 +218,7 @@ namespace SNBS.Licensing
             {
 #pragma warning disable CS8604
                 regKey.SetValue("Expiration", info.Expiration?.ToShortDateString());
-#pragma warning disable CS8604
+#pragma warning restore CS8604
             }
 
             return info;
