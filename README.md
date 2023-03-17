@@ -227,8 +227,9 @@ The code above will retrieve the connection string and information about usage o
 All methods of `LicensingClient`, `LicenseValidator` and `LicensingAdmin` that access the licenses database have TAP-asynchronous versions (they have suffix `Async` and return `Task` or `Task<TResult>`). You may use them like this:
 
 ```c#
-var client = new LicensingClient("YourConnectionString", "YourProductName");
-await client.ActivateProductAsync("AAAAA-AAAAA-AAAAA-AAAAA-AAAAA");
+using (var client = new LicensingClient("YourConnectionString", "YourProductName")) {
+  var info = await client.ActivateProductAsync("AAAAA-AAAAA-AAAAA-AAAAA-AAAAA");
+}
 ```
 
 ## Tests
