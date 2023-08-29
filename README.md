@@ -1,6 +1,4 @@
-**Version 2.0.0 gonna be released soon! The clients serving mechanism will be completely changed to use HTTP. The update is highly recommended to install as soon as it's released.**
-
-**Anybody using this library is kindly asked to visit [issue #9](https://github.com/SNBSLibs/Licensing.ActivationKeys/issues/9) and comment it to tell me if renewal keys support is worth adding. Waiting for your votes!**
+**We're sorry to say that we cannot continue development for internal reasons. This repository is now archived.**
 
 # Licensing library from SNBS
 
